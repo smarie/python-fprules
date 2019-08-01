@@ -6,7 +6,7 @@ except ImportError:
     from pathlib2 import Path, PurePath
 
 
-def test_stem_only_simplest(self):
+def test_stem_only_simplest():
     # locate the resources folder
     resources = Path(__file__).parent / "resources"
 
@@ -18,7 +18,7 @@ def test_stem_only_simplest(self):
     assert [str(r) for r in res] == expected
 
 
-def test_stem_with_multifolder_not_dst(self):
+def test_stem_with_multifolder_not_dst():
     # locate the resources folder
     resources = Path(__file__).parent / "resources"
 
@@ -31,7 +31,7 @@ def test_stem_with_multifolder_not_dst(self):
     assert [str(r) for r in res] == expected
 
 
-def test_stem_with_multifolder_in_dst(self):
+def test_stem_with_multifolder_in_dst():
     # locate the resources folder
     resources = Path(__file__).parent / "resources"
 
@@ -44,7 +44,7 @@ def test_stem_with_multifolder_in_dst(self):
     assert [str(r) for r in res] == expected
 
 
-def test_stem_multifolder_multi_dst(self):
+def test_stem_multifolder_multi_dst():
     # locate the resources folder
     resources = Path(__file__).parent / "resources"
 
@@ -58,7 +58,7 @@ def test_stem_multifolder_multi_dst(self):
     assert [str(r) for r in res] == expected
 
 
-def test_nostem_nofolder(self):
+def test_nostem_nofolder():
     # locate the resources folder
     resources = Path(__file__).parent / "resources"
 
@@ -70,7 +70,7 @@ def test_nostem_nofolder(self):
     assert [str(r) for r in res] == expected
 
 
-def test_nostem_folders(self):
+def test_nostem_folders():
     # locate the resources folder
     resources = Path(__file__).parent / "resources"
 
