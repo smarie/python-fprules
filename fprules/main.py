@@ -1,4 +1,5 @@
 from collections import namedtuple, OrderedDict
+from sys import version_info
 
 try:
     from pathlib import Path, PurePath
@@ -142,9 +143,19 @@ def _validate_dst_pattern(dst_pattern, src_pattern, src_has_double_wildcard, pat
     return dst_pattern
 
 
+if version_info >= (3, 6):
+    _true_fp_sig = """file_pattern(src_pattern: Union[str, Any],
+                                   dst_pattern: Union[str, Any],
+                                   *,
+                                   names: Union[str, Any] = None,
+                                   # src_attr: str = 'src_path',
+                                   # dst_attr: str = 'dst_path'
+                     )"""
+
+
 def file_pattern(src_pattern,          # type: Union[str, Any]
                  dst_pattern,          # type: Union[str, Any]
-                 *,
+                 # *,  this keyword-only feature is added on python 3.6+, see above
                  names=None,            # type: Union[str, Any]
                  # src_attr='src_path',  # type: str
                  # dst_attr='dst_path'   # type: str
@@ -283,3 +294,10 @@ def file_pattern(src_pattern,          # type: Union[str, Any]
         yield FileItem(src_path=f_path, dst_path=dst_paths,
                        has_multi_targets=has_multi_targets,
                        name=name)
+
+
+if version_info >= (3, 6):
+    # in python versions that allow it,
+    # modify the signature so that name and others are keyword-only arguments
+    from makefun import with_signature
+    file_pattern = with_signature(_true_fp_sig)(file_pattern)

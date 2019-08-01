@@ -1,4 +1,7 @@
+import sys
 from collections import OrderedDict
+
+import pytest
 
 from fprules import file_pattern
 
@@ -6,6 +9,12 @@ try:
     from pathlib import Path, PurePath
 except ImportError:
     from pathlib2 import Path, PurePath
+
+
+@pytest.mark.skipif(sys.version_info < (3, 6), reason="Keyword-only argument require python3.6 or higher")
+def test_signature_has_keyword_only():
+    with pytest.raises(TypeError):
+        file_pattern('*.*', '%', '%')
 
 
 def test_stem_only_simplest():
