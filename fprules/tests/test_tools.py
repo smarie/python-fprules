@@ -1,3 +1,5 @@
+from collections import OrderedDict
+
 from fprules import file_pattern
 
 try:
@@ -49,8 +51,10 @@ def test_stem_multifolder_multi_dst():
     resources = Path(__file__).parent / "resources"
 
     # use the file_pattern and assert results
+    # note: we use an ordered dict so that the test has reproducible order when on old python versions
     res = file_pattern(str(resources) + "/foo/**/*.y*ml",
-                             dst_pattern=dict(flat="./target/%.toto", nested="./%%/target2/%"))
+                       dst_pattern=OrderedDict([('flat', "./target/%.toto"),
+                                                ('nested', "./%%/target2/%")]))
     expected = [
         "%s/foo/xfile.yml -> {flat=target/xfile.toto, nested=target2/xfile}" % resources.as_posix(),
         '%s/foo/bar/file3.yaml -> {flat=target/file3.toto, nested=bar/target2/file3}' % resources.as_posix()

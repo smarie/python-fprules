@@ -1,4 +1,4 @@
-from collections import namedtuple
+from collections import namedtuple, OrderedDict
 
 try:
     from pathlib import Path, PurePath
@@ -236,8 +236,10 @@ def file_pattern(src_pattern,  # type: Union[str, Any]
         for f_path in match_generator:
             # create the destination path(s)
             if has_multi_targets:
-                dst_paths = {dst_name: _create_dst_path(f_path, _dst_pattern)
-                             for dst_name, _dst_pattern in dst_pattern.items()}
+                # use an OrderedDict for legacy python compatibility
+                _items = [(dst_name, _create_dst_path(f_path, _dst_pattern))
+                          for dst_name, _dst_pattern in dst_pattern.items()]
+                dst_paths = OrderedDict(_items)
             else:
                 dst_paths = _create_dst_path(f_path, dst_pattern)
 
@@ -259,9 +261,11 @@ def file_pattern(src_pattern,  # type: Union[str, Any]
         for f_path, capt_subpath in match_generator:
             # create the destination path(s)
             if has_multi_targets:
-                dst_paths = {dst_name: _create_dst_path(f_path, capt_subpath,
-                                                        _dst_pattern)
-                             for dst_name, _dst_pattern in dst_pattern.items()}
+                # use an OrderedDict for legacy python compatibility
+                _items = [(dst_name, _create_dst_path(f_path, capt_subpath,
+                                                      _dst_pattern))
+                          for dst_name, _dst_pattern in dst_pattern.items()]
+                dst_paths = OrderedDict(_items)
             else:
                 dst_paths = _create_dst_path(f_path, capt_subpath, dst_pattern)
 
