@@ -7,8 +7,9 @@ from os.path import dirname, exists
 
 import pytest
 
-from doit.cmd_base import ModuleTaskLoader
-from doit.doit_cmd import DoitMain
+if sys.version_info >= (3, 0):
+    from doit.cmd_base import ModuleTaskLoader
+    from doit.doit_cmd import DoitMain
 
 from fprules import file_pattern
 from fprules.tests.resources import example_csv_ddl
@@ -48,7 +49,8 @@ def test_doc1(capsys):
 """
 
 
-@pytest.mark.skipif(sys.version_info < (3, 0), reason="latest `doit` requires python3+")
+@pytest.mark.skipif(sys.version_info < (3, 6), reason="latest `doit` requires python3+, and on python 3.5 the current "
+                                                      "directory is not passed correctly.")
 def test_doc2():
     """Tests that the example in the documentation is working correctly"""
 
