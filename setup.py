@@ -14,8 +14,8 @@ here = path.abspath(path.dirname(__file__))
 INSTALL_REQUIRES = ['pathlib2;python_version<"3.2"']
 DEPENDENCY_LINKS = []
 SETUP_REQUIRES = ['pytest-runner', 'setuptools_scm', 'pypandoc', 'pandoc']
-TESTS_REQUIRE = ['pytest', 'pytest-logging', 'pytest-cov', #  'pytest-cases
-                 ]
+TESTS_REQUIRE = ['pytest', 'pytest-logging', 'pytest-cov',  #  'pytest-cases
+                 'requests', 'tqdm', 'doit']
 EXTRAS_REQUIRE = {}
 
 # simple check
