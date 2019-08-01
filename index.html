@@ -252,6 +252,40 @@
     Usage
   </a>
   
+    <nav class="md-nav">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#1-source-file-1-target-file" title="1 source file -&gt; 1 target file" class="md-nav__link">
+    1 source file -&gt; 1 target file
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#using-the-extension" title="Using the extension" class="md-nav__link">
+    Using the extension
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#variable-paths" title="Variable paths" class="md-nav__link">
+    Variable paths
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#1-source-file-n-target-files" title="1 source file -&gt; n target files" class="md-nav__link">
+    1 source file -&gt; n target files
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
 </li>
       
         <li class="md-nav__item">
@@ -343,6 +377,40 @@
     Usage
   </a>
   
+    <nav class="md-nav">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#1-source-file-1-target-file" title="1 source file -&gt; 1 target file" class="md-nav__link">
+    1 source file -&gt; 1 target file
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#using-the-extension" title="Using the extension" class="md-nav__link">
+    Using the extension
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#variable-paths" title="Variable paths" class="md-nav__link">
+    Variable paths
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#1-source-file-n-target-files" title="1 source file -&gt; n target files" class="md-nav__link">
+    1 source file -&gt; n target files
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
 </li>
       
         <li class="md-nav__item">
@@ -409,7 +477,73 @@
 
 
 <h2 id="usage">Usage<a class="headerlink" href="#usage" title="Permanent link">&para;</a></h2>
-<p>TODO</p>
+<h3 id="1-source-file-1-target-file">1 source file -&gt; 1 target file<a class="headerlink" href="#1-source-file-1-target-file" title="Permanent link">&para;</a></h3>
+<p>In this fictitious example we have a bunch of <code>*.ddl</code> files in a <code>defs/</code> folder. </p>
+<p><img alt="doc_example_csv_ddl" src="imgs/doc_example_csv_ddl.png" /></p>
+<p>Each of them contains a URL to a remote csv file. For example you can look at <a href="https://raw.githubusercontent.com/smarie/python-fprules/master/fprules/tests/resources/example_csv_ddl/defs/iris.ddl"><code>iris.ddl</code></a>.</p>
+<p>We wish to create a <em>download task</em> for each of them, so that the task is named after the <code>.ddl</code> file name and the destination of the download is a new <code>*.csv</code> file under folder <code>downloaded/</code>. </p>
+<p>Thanks to <code>fprules</code> we can easily generate a to-do list:</p>
+<div class="codehilite"><pre><span></span><span class="kn">from</span> <span class="nn">fprules</span> <span class="kn">import</span> <span class="n">file_pattern</span>
+
+<span class="c1"># define the pattern to create a generator</span>
+<span class="n">ddl_task_generator</span> <span class="o">=</span> <span class="n">file_pattern</span><span class="p">(</span><span class="s1">&#39;./defs/*.ddl&#39;</span><span class="p">,</span> <span class="s1">&#39;./downloaded/%.csv&#39;</span><span class="p">)</span>
+
+<span class="c1"># print the contents of the to-do list</span>
+<span class="k">for</span> <span class="n">t</span> <span class="ow">in</span> <span class="n">ddl_task_generator</span><span class="p">:</span>
+    <span class="k">print</span><span class="p">(</span><span class="n">t</span><span class="p">)</span>
+</pre></div>
+
+
+<p>yields:</p>
+<div class="codehilite"><pre><span></span><span class="o">[</span>iris.ddl<span class="o">]</span> defs/iris.ddl -&gt; downloaded/iris.csv
+<span class="o">[</span>wine.ddl<span class="o">]</span> defs/wine.ddl -&gt; downloaded/wine.csv
+</pre></div>
+
+
+<p>We can then create the tasks with our preferred build tool. For example with <a href="https://pydoit.org/"><code>doit</code></a> you can create the following <code>dodo.py</code> file. Note: the downloading function <code>download_from_ddl_def</code> used in this example can be found <a href="">here</a>.</p>
+<div class="codehilite"><pre><span></span><span class="kn">from</span> <span class="nn">fprules</span> <span class="kn">import</span> <span class="n">file_pattern</span> 
+<span class="kn">from</span> <span class="nn">.</span> <span class="kn">import</span> <span class="n">download_from_ddl_def</span>
+
+<span class="k">def</span> <span class="nf">task_download_data</span><span class="p">():</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Downloads file `./downloaded/&lt;dataset&gt;.csv` for each def file `./defs/&lt;dataset&gt;.ddl`.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">for</span> <span class="n">data</span> <span class="ow">in</span> <span class="n">file_pattern</span><span class="p">(</span><span class="s1">&#39;./defs/*.ddl&#39;</span><span class="p">,</span> <span class="s1">&#39;./downloaded/%.csv&#39;</span><span class="p">):</span>
+        <span class="k">yield</span> <span class="p">{</span>
+            <span class="s1">&#39;name&#39;</span><span class="p">:</span> <span class="n">data</span><span class="o">.</span><span class="n">name</span><span class="p">,</span>
+            <span class="s1">&#39;file_dep&#39;</span><span class="p">:</span> <span class="p">[</span><span class="n">data</span><span class="o">.</span><span class="n">src_path</span><span class="p">],</span>
+            <span class="s1">&#39;actions&#39;</span><span class="p">:</span> <span class="p">[</span><span class="k">lambda</span> <span class="n">data</span><span class="p">:</span> <span class="n">download_from_ddl_def</span><span class="p">(</span><span class="n">data</span><span class="o">.</span><span class="n">src_path</span><span class="p">,</span> <span class="n">data</span><span class="o">.</span><span class="n">dst_path</span><span class="p">)],</span>
+            <span class="s1">&#39;verbosity&#39;</span><span class="p">:</span> <span class="mi">2</span><span class="p">,</span>
+            <span class="s1">&#39;targets&#39;</span><span class="p">:</span> <span class="p">[</span><span class="n">data</span><span class="o">.</span><span class="n">dst_path</span><span class="p">]</span>
+        <span class="p">}</span>
+</pre></div>
+
+
+<p>It lists the tasks correctly:</p>
+<div class="codehilite"><pre><span></span>&gt;&gt;&gt; doit list --all
+download_data        Downloads file <span class="sb">`</span>./downloaded/&lt;dataset&gt;.csv<span class="sb">`</span> <span class="k">for</span> each def file <span class="sb">`</span>./defs/&lt;dataset&gt;.ddl<span class="sb">`</span>.
+download_data:iris   
+download_data:wine
+</pre></div>
+
+
+<p>And execution works as well:</p>
+<div class="codehilite"><pre><span></span>&gt;&gt;&gt; doit download_data
+.  download_data:iris
+<span class="o">==</span> Downloading file from https://archive.ics.uci.edu/ml/machine-learning-databases/iris/iris.data to downloaded<span class="se">\i</span>ris.csv
+
+<span class="m">5</span>.00KB <span class="o">[</span><span class="m">00</span>:00, <span class="m">4</span>.86kKB/s<span class="o">]</span>                  
+
+.  download_data:wine
+<span class="o">==</span> Downloading file from https://archive.ics.uci.edu/ml/machine-learning-databases/wine/wine.data to downloaded<span class="se">\w</span>ine.csv
+
+<span class="m">11</span>.0KB <span class="o">[</span><span class="m">00</span>:00, <span class="m">5</span>.43kKB/s<span class="o">]</span>
+</pre></div>
+
+
+<h3 id="using-the-extension">Using the extension<a class="headerlink" href="#using-the-extension" title="Permanent link">&para;</a></h3>
+<h3 id="variable-paths">Variable paths<a class="headerlink" href="#variable-paths" title="Permanent link">&para;</a></h3>
+<h3 id="1-source-file-n-target-files">1 source file -&gt; n target files<a class="headerlink" href="#1-source-file-n-target-files" title="Permanent link">&para;</a></h3>
 <h2 id="main-features-benefits">Main features / benefits<a class="headerlink" href="#main-features-benefits" title="Permanent link">&para;</a></h2>
 <p>TODO</p>
 <h2 id="see-also">See Also<a class="headerlink" href="#see-also" title="Permanent link">&para;</a></h2>
