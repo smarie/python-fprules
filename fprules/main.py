@@ -1,3 +1,5 @@
+from collections import namedtuple
+
 try:
     from pathlib import Path, PurePath
 except ImportError:
