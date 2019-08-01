@@ -36,7 +36,7 @@ LICENSE_LONG = 'License :: OSI Approved :: BSD License'
 version_for_download_url = get_version()
 DOWNLOAD_URL = URL + '/tarball/' + version_for_download_url
 
-KEYWORDS = 'file pattern rules GNU make build tool task'
+KEYWORDS = 'file pattern rule rules GNU make build tool task'
 # --Get the long description from the README file
 # with open(path.join(here, 'README.md'), encoding='utf-8') as f:
 #    LONG_DESCRIPTION = f.read()
