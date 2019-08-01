@@ -2,9 +2,8 @@ import sys
 from contextlib import contextmanager
 from functools import partial
 from inspect import isgenerator
-from itertools import tee
 from os import chdir, getcwd, remove, listdir
-from os.path import dirname, exists, basename
+from os.path import dirname, exists
 
 import pytest
 
@@ -38,7 +37,7 @@ def test_doc1(capsys):
         assert isgenerator(ddl_task_generator)
 
         # print the contents of the to-do list
-        for t in ddl_task_generator:
+        for t in sorted(ddl_task_generator, key=lambda f: f.name):
             print(t)
 
         with capsys.disabled():
