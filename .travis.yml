@@ -26,6 +26,7 @@ install:
   - pip list
   - pip install setuptools_scm  # apparently python 2 does not support that it is installed simultaneously with pytest-cases
   - python ci_tools/py_install.py pip ci_tools/requirements-pip.txt
+  - if [ ! "${TRAVIS_PYTHON_VERSION}" = "2.7" ]; then pip install doit; fi;
   # travis-specific installs
   - pip install PyGithub  # for ci_tools/github_release.py
   - pip install codecov  # See https://github.com/codecov/example-python.

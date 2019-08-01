@@ -1,9 +1,12 @@
+import sys
 from contextlib import contextmanager
 from functools import partial
 from inspect import isgenerator
 from itertools import tee
 from os import chdir, getcwd, remove, listdir
 from os.path import dirname, exists, basename
+
+import pytest
 
 from doit.cmd_base import ModuleTaskLoader
 from doit.doit_cmd import DoitMain
@@ -46,6 +49,7 @@ def test_doc1(capsys):
 """
 
 
+@pytest.mark.skipif(sys.version_info < (3, 0), reason="latest `doit` requires python3+")
 def test_doc2():
     """Tests that the example in the documentation is working correctly"""
 
