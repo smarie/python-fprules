@@ -60,7 +60,7 @@ yields:
 [wine.ddl] defs/wine.ddl -> downloaded/wine.csv
 ```
 
-We can then create the tasks with our preferred build tool. For example with [`doit`](https://pydoit.org/) you can create the following `dodo.py` file. Note: the downloading function `download_from_ddl_def` used in this example can be found [here]().
+We can then create the tasks with our preferred build tool. For example with [`doit`](https://pydoit.org/) you can create the following `dodo.py` file. Note: the downloading function `download_from_ddl_def` used in this example can be found [here](https://github.com/smarie/python-fprules/blob/master/fprules/tests/ddl_data.py).
 
 ```python
 from fprules import file_pattern 
