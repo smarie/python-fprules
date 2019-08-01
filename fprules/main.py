@@ -116,7 +116,7 @@ class FileItem(namedtuple('FileItem',
         else:
             secnd_str = self.dst_path.as_posix()
 
-        return "[%s] %s -> %s" % (self.name.as_posix(), self.src_path.as_posix(), secnd_str)
+        return "[%s] %s -> %s" % (self.name, self.src_path.as_posix(), secnd_str)
 
     def __repr__(self):
         # default to readable representation
@@ -288,7 +288,7 @@ def file_pattern(src_pattern,          # type: Union[str, Any]
             dst_paths = _create_dst_path(f_path, capt_subpath, dst_pattern)
 
         # create the name
-        name = _create_dst_path(f_path, capt_subpath, names)
+        name = _create_dst_path(f_path, capt_subpath, names).as_posix()
 
         # finally create the container object and append
         yield FileItem(src_path=f_path, dst_path=dst_paths,
