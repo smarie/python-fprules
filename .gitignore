@@ -114,3 +114,6 @@ site/
 github_travis_rsa*
 reports
 **/_version.py # so that version.py can not be pushed by mistake
+
+# doit
+**/*doit*
