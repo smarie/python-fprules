@@ -1,4 +1,5 @@
 """Data downloader module"""
+from __future__ import print_function
 # import sys
 # import click
 import math

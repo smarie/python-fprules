@@ -1,3 +1,4 @@
+from __future__ import print_function
 import sys
 from contextlib import contextmanager
 from functools import partial
@@ -33,12 +34,14 @@ def test_doc1(capsys):
     print()
     with cd(dirname(example_csv_ddl.__file__)):
         # define the pattern to create a generator
-        ddl_task_generator = file_pattern('./defs/*.ddl', './downloaded/%.csv')
+        with capsys.disabled():
+            ddl_task_generator = file_pattern('./defs/*.ddl', './downloaded/%.csv')
 
-        assert isgenerator(ddl_task_generator)
+            assert isgenerator(ddl_task_generator)
+            sorted_list = sorted(ddl_task_generator, key=lambda f: f.name)
 
         # print the contents of the to-do list
-        for t in sorted(ddl_task_generator, key=lambda f: f.name):
+        for t in sorted_list:
             print(t)
 
         with capsys.disabled():
