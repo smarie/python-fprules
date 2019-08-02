@@ -538,21 +538,33 @@
 </pre></div>
 
 
-<p>We can then create the tasks with our preferred build tool. For example with <a href="https://pydoit.org/"><code>doit</code></a> we can create the following <code>dodo.py</code> file. Note: the downloading function <code>download_from_ddl_def</code> used in this example can be found <a href="https://github.com/smarie/python-fprules/blob/master/fprules/tests/ddl_data.py">here</a>.</p>
-<div class="codehilite"><pre><span></span><span class="kn">from</span> <span class="nn">fprules</span> <span class="kn">import</span> <span class="n">file_pattern</span> 
-<span class="kn">from</span> <span class="nn">.</span> <span class="kn">import</span> <span class="n">download_from_ddl_def</span>
+<p>We can then create the tasks with our preferred build tool. For example with <a href="https://pydoit.org/"><code>doit</code></a> we can create the following <code>dodo.py</code> file. Note: this code requires <code>wget</code>.</p>
+<div class="codehilite"><pre><span></span><span class="kn">from</span> <span class="nn">wget</span> <span class="kn">import</span> <span class="n">download</span>
+<span class="kn">from</span> <span class="nn">fprules</span> <span class="kn">import</span> <span class="n">file_pattern</span> 
+
+
+<span class="k">def</span> <span class="nf">download_from_ddl_def</span><span class="p">(</span><span class="n">ddl_file</span><span class="p">,</span> <span class="n">csv_path</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot; download csv file to `csv_path` from url in `ddl_file` &quot;&quot;&quot;</span>
+    <span class="c1"># Read the URL from the file</span>
+    <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">ddl_file</span><span class="p">)</span> <span class="k">as</span> <span class="n">f</span><span class="p">:</span>
+        <span class="n">ddl_url</span> <span class="o">=</span> <span class="n">f</span><span class="o">.</span><span class="n">readline</span><span class="p">()</span><span class="o">.</span><span class="n">strip</span><span class="p">(</span><span class="s1">&#39;</span><span class="se">\n\r</span><span class="s1">&#39;</span><span class="p">)</span>
+
+    <span class="c1"># Download</span>
+    <span class="k">print</span><span class="p">(</span><span class="s2">&quot;== Downloading file from </span><span class="si">%s</span><span class="s2"> to </span><span class="si">%s</span><span class="s2">&quot;</span> <span class="o">%</span> <span class="p">(</span><span class="n">ddl_url</span><span class="p">,</span> <span class="n">csv_path</span><span class="p">))</span>
+    <span class="n">download</span><span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="n">ddl_url</span><span class="p">),</span> <span class="nb">str</span><span class="p">(</span><span class="n">csv_path</span><span class="p">))</span>
+
 
 <span class="k">def</span> <span class="nf">task_download_data</span><span class="p">():</span>
     <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">    Downloads file `./downloaded/&lt;dataset&gt;.csv` </span>
+<span class="sd">    Downloads file `./downloaded/&lt;dataset&gt;.csv`</span>
 <span class="sd">    for each def file `./defs/&lt;dataset&gt;.ddl`.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="k">for</span> <span class="n">data</span> <span class="ow">in</span> <span class="n">file_pattern</span><span class="p">(</span><span class="s1">&#39;./defs/*.ddl&#39;</span><span class="p">,</span> <span class="s1">&#39;./downloaded/%.csv&#39;</span><span class="p">):</span>
         <span class="k">yield</span> <span class="p">{</span>
             <span class="s1">&#39;name&#39;</span><span class="p">:</span> <span class="n">data</span><span class="o">.</span><span class="n">name</span><span class="p">,</span>
             <span class="s1">&#39;file_dep&#39;</span><span class="p">:</span> <span class="p">[</span><span class="n">data</span><span class="o">.</span><span class="n">src_path</span><span class="p">],</span>
-            <span class="s1">&#39;actions&#39;</span><span class="p">:</span> <span class="p">[</span><span class="k">lambda</span> <span class="n">data</span><span class="p">:</span> <span class="n">download_from_ddl_def</span><span class="p">(</span><span class="n">data</span><span class="o">.</span><span class="n">src_path</span><span class="p">,</span> 
-                                                           <span class="n">data</span><span class="o">.</span><span class="n">dst_path</span><span class="p">)],</span>
+            <span class="s1">&#39;actions&#39;</span><span class="p">:</span> <span class="p">[(</span><span class="n">download_from_ddl_def</span><span class="p">,</span> <span class="p">(),</span>
+                         <span class="nb">dict</span><span class="p">(</span><span class="n">ddl_file</span><span class="o">=</span><span class="n">data</span><span class="o">.</span><span class="n">src_path</span><span class="p">,</span> <span class="n">csv_path</span><span class="o">=</span><span class="n">data</span><span class="o">.</span><span class="n">dst_path</span><span class="p">))],</span>
             <span class="s1">&#39;verbosity&#39;</span><span class="p">:</span> <span class="mi">2</span><span class="p">,</span>
             <span class="s1">&#39;targets&#39;</span><span class="p">:</span> <span class="p">[</span><span class="n">data</span><span class="o">.</span><span class="n">dst_path</span><span class="p">]</span>
         <span class="p">}</span>
