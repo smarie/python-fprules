@@ -96,6 +96,10 @@ def test_doc2():
         status_code = DoitMain(loader).run(['download_data'])
         assert status_code == 0
 
+        # attempt to fix the wget bug
+        if not hasattr(sys.stdout, 'fileno'):
+            setattr(sys.stdout, 'fileno', lambda: 1)
+
         # check that the destination folder is now full
         for t in listdir('./defs/'):
             assert exists('./downloaded/%s.csv' % t[:-4])
