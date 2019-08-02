@@ -2,6 +2,7 @@
 pypandoc
 pytest-runner
 setuptools_scm
+six
 
 # --- to run the tests
 pytest  #$PYTEST_VERSION
