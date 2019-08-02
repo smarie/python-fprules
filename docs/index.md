@@ -60,23 +60,35 @@ yields:
 [wine.ddl] defs/wine.ddl -> downloaded/wine.csv
 ```
 
-We can then create the tasks with our preferred build tool. For example with [`doit`](https://pydoit.org/) we can create the following `dodo.py` file. Note: the downloading function `download_from_ddl_def` used in this example can be found [here](https://github.com/smarie/python-fprules/blob/master/fprules/tests/ddl_data.py).
+We can then create the tasks with our preferred build tool. For example with [`doit`](https://pydoit.org/) we can create the following `dodo.py` file. Note: this code requires `wget`.
 
 ```python
+from wget import download
 from fprules import file_pattern 
-from . import download_from_ddl_def
+
+
+def download_from_ddl_def(ddl_file, csv_path):
+    """ download csv file to `csv_path` from url in `ddl_file` """
+    # Read the URL from the file
+    with open(ddl_file) as f:
+        ddl_url = f.readline().strip('\n\r')
+
+    # Download
+    print("== Downloading file from %s to %s" % (ddl_url, csv_path))
+    download(str(ddl_url), str(csv_path))
+
 
 def task_download_data():
     """
-    Downloads file `./downloaded/<dataset>.csv` 
+    Downloads file `./downloaded/<dataset>.csv`
     for each def file `./defs/<dataset>.ddl`.
     """
     for data in file_pattern('./defs/*.ddl', './downloaded/%.csv'):
         yield {
             'name': data.name,
             'file_dep': [data.src_path],
-            'actions': [lambda data: download_from_ddl_def(data.src_path, 
-                                                           data.dst_path)],
+            'actions': [(download_from_ddl_def, (),
+                         dict(ddl_file=data.src_path, csv_path=data.dst_path))],
             'verbosity': 2,
             'targets': [data.dst_path]
         }

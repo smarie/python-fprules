@@ -1,12 +1,12 @@
 from __future__ import print_function
 import sys
 from contextlib import contextmanager
-from functools import partial
 from inspect import isgenerator
 from os import chdir, getcwd, remove, listdir
 from os.path import dirname, exists
 
 import pytest
+from wget import download
 
 if sys.version_info >= (3, 0):
     from doit.cmd_base import ModuleTaskLoader
@@ -14,7 +14,6 @@ if sys.version_info >= (3, 0):
 
 from fprules import file_pattern
 from fprules.tests.resources import example_csv_ddl
-from fprules.tests.ddl_data import download_from_ddl_def
 
 
 @contextmanager
@@ -63,16 +62,28 @@ def test_doc2():
             if t not in ('.gitignore', ):
                 remove('./downloaded/%s' % t)
 
+        def download_from_ddl_def(ddl_file, csv_path):
+            """ download csv file to `csv_path` from url in `ddl_file` """
+            # Read the URL from the file
+            with open(ddl_file) as f:
+                ddl_url = f.readline().strip('\n\r')
+
+            # Download
+            print("== Downloading file from {url} to {dst}".format(url=ddl_url, dst=csv_path))
+            download(str(ddl_url), str(csv_path))
+
         # create a doit task
         def task_download_data():
             """
-            Downloads file `./downloaded/<dataset>.csv` for each def file `./defs/<dataset>.ddl`.
+            Downloads a file `./downloaded/<dataset>.csv`
+            for each def file `./defs/<dataset>.ddl`.
             """
             for data in file_pattern('./defs/*.ddl', './downloaded/%.csv'):
                 yield {
                     'name': data.name,
                     'file_dep': [data.src_path],
-                    'actions': [partial(download_from_ddl_def, ddl_file=data.src_path, csv_path=data.dst_path)],
+                    'actions': [(download_from_ddl_def, (),
+                                 dict(ddl_file=data.src_path, csv_path=data.dst_path))],
                     'verbosity': 2,
                     'targets': [data.dst_path]
                 }

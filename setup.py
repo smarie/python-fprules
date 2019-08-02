@@ -15,7 +15,7 @@ INSTALL_REQUIRES = ['pathlib2;python_version<"3.2"', 'makefun;python_version<"3.
 DEPENDENCY_LINKS = []
 SETUP_REQUIRES = ['pytest-runner', 'setuptools_scm', 'pypandoc', 'pandoc', 'six']
 TESTS_REQUIRE = ['pytest', 'pytest-logging', 'pytest-cov',  #  'pytest-cases
-                 'requests', 'tqdm', 'doit']
+                 'requests', 'wget', 'doit']
 EXTRAS_REQUIRE = {}
 
 # simple check
