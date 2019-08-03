@@ -70,6 +70,9 @@ def test_doc2():
 
             # Download
             print("== Downloading file from {url} to {dst}".format(url=ddl_url, dst=csv_path))
+            # attempt to fix the wget bug
+            if not hasattr(sys.stdout, 'fileno'):
+                setattr(sys.stdout, 'fileno', lambda: 1)
             download(str(ddl_url), str(csv_path))
 
         # create a doit task
@@ -95,10 +98,6 @@ def test_doc2():
 
         status_code = DoitMain(loader).run(['download_data'])
         assert status_code == 0
-
-        # attempt to fix the wget bug
-        if not hasattr(sys.stdout, 'fileno'):
-            setattr(sys.stdout, 'fileno', lambda: 1)
 
         # check that the destination folder is now full
         for t in listdir('./defs/'):
