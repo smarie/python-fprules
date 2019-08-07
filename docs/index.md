@@ -144,7 +144,8 @@ Concerning the strategies:
 
 Related stack overflow discussions:
 
- - TODO
+ - [discussion 1](https://stackoverflow.com/a/57313760/7262247)
+ 
 
 ### Others
 
