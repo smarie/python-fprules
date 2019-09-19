@@ -1,5 +1,9 @@
 # Changelog
 
+### 0.2.1 - `setup.py` Bugfix
+
+Dependency `makefun` was not correctly declared into `setup.py`. Fixes [#6](https://github.com/smarie/python-fprules/issues/6).
+
 ### 0.2.0 - First public version
 
 `file_pattern` now returns a generator. Fixed [#1](https://github.com/smarie/python-fprules/issues/1).
