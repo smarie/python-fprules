@@ -11,7 +11,7 @@ from setuptools import setup, find_packages
 here = path.abspath(path.dirname(__file__))
 
 # *************** Dependencies *********
-INSTALL_REQUIRES = ['pathlib2;python_version<"3.2"', 'makefun;python_version<"3.6"']
+INSTALL_REQUIRES = ['pathlib2;python_version<"3.2"', 'makefun;python_version>="3.6"']
 DEPENDENCY_LINKS = []
 SETUP_REQUIRES = ['pytest-runner', 'setuptools_scm', 'pypandoc', 'pandoc', 'six']
 TESTS_REQUIRE = ['pytest', 'pytest-logging', 'pytest-cov',  #  'pytest-cases
