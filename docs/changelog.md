@@ -1,5 +1,9 @@
 # Changelog
 
+### 0.2.2 - `pyproject.toml`
+
+Added `pyproject.toml`.
+
 ### 0.2.1 - `setup.py` Bugfix
 
 Dependency `makefun` was not correctly declared into `setup.py`. Fixes [#6](https://github.com/smarie/python-fprules/issues/6).
