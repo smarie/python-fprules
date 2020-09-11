@@ -130,6 +130,8 @@ TODO
 
 ### 1 source file -> n target files
 
+It is possible to declare multiple destination patterns by passing a `dict` `dst_pattern` instead of a single element. In that case the resulting list will contain `FileItem` instances that have one attribute per pattern.
+    
 TODO
 
 ## Main features / benefits
@@ -140,7 +142,8 @@ TODO
 
 Concerning the strategies:
 
- - The [doit](https://pydoit.org/) task-oriented automation tool
+ - The [`doit`](https://pydoit.org/) task-oriented automation tool
+ - [`doit-api`](https://smarie.github.io/python-doit-api/), a plugin to make doit easier to use
 
 Related stack overflow discussions:
 
