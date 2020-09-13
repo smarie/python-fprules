@@ -24,6 +24,7 @@ def gen_matching_files(src_pattern,  # type: Path
        search
      - the second element is a string representing the part of the path
        captured by the double wildcard if `**` was present in `src_pattern`.
+       If several double wildcards were present, the path captured spans from the first to the last one.
        Otherwise the second element is `None`.
 
     :param src_pattern: a `Path` representing the source pattern to match.
@@ -32,24 +33,28 @@ def gen_matching_files(src_pattern,  # type: Path
     :return: a generator yielding tuples (<file_path>, <captured_double_wildcard_path>)
     """
     # -- validate the source pattern
-    src_double_wildcard = None
-    src_glob_start = None
+    src_double_wildcard = None  # the index of the first '**' path element, and the pattern after the last '**' path elt
+    src_glob_start = None  # the index of the first path element where special glob characters are used
+
     for i, p in enumerate(src_pattern.parts):
         if src_glob_start is None and ('*' in p or '?' in p or '[' in p):
+            # first path element where a special glob character is used
             src_glob_start = i
         if '**' in p:
             if p != '**':
-                raise ValueError("Invalid pattern '%s': double-wildcard should"
-                                 " be alone in its path element" % src_pattern)
-            elif src_double_wildcard is None:
+                # raise same error than glob
+                raise ValueError("Invalid pattern '%s': '**' can only be an entire path component" % src_pattern)
+            else:
                 try:
                     end_ptrn = Path(*src_pattern.parts[i+1:])
                 except IndexError:
                     end_ptrn = None
-                src_double_wildcard = (i, end_ptrn)
-            else:
-                raise ValueError("Invalid source pattern '%s': several "
-                                 "double-wildcards exist." % src_pattern)
+                if src_double_wildcard is None:
+                    # first double wildcard
+                    src_double_wildcard = (i, end_ptrn)
+                else:
+                    # second double wildcard: replace the end pattern
+                    src_double_wildcard = (src_double_wildcard[0], end_ptrn)
 
     # -- Perform the glob file search operation, using Pathlib.glob
     if src_glob_start is None:
@@ -62,7 +67,7 @@ def gen_matching_files(src_pattern,  # type: Path
 
     # Create the appropriate generator according to presence of '**'
     if src_double_wildcard is None:
-        # simply yield the matching file Path items
+        # no double wildcard: simply yield the matching file Path items
         for matched_file in glob_results:
             yield matched_file, None
     else:
