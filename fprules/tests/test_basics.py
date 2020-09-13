@@ -109,4 +109,5 @@ def test_several_double_wildcards():
         "[basics/foo/bar/file3] %s/basics/foo/bar/file3.yaml -> target/basics/foo/bar" % resources.as_posix(),
         "[basics2/foo/hello] %s/basics2/foo/hello.yml -> target/basics2/foo" % resources.as_posix(),
     ]
-    assert [str(r) for r in res] == expected
+    # order is different on travis/linux
+    assert set([str(r) for r in res]) == set(expected)
